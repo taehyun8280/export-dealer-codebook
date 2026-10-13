@@ -6,7 +6,7 @@
    "country": "일본",
    "region": "아시아",
    "star": false,
-   "mgr": "",
+   "mgr": "오성진",
    "k": "s0"
   },
   {
@@ -15,7 +15,7 @@
    "country": "일본",
    "region": "아시아",
    "star": false,
-   "mgr": "",
+   "mgr": "오성진",
    "k": "s1"
   },
   {
@@ -51,7 +51,7 @@
    "country": "중국",
    "region": "아시아",
    "star": false,
-   "mgr": "",
+   "mgr": "이지수",
    "k": "s7"
   },
   {
@@ -60,7 +60,7 @@
    "country": "인도네시아",
    "region": "아시아",
    "star": false,
-   "mgr": "",
+   "mgr": "박진우",
    "k": "s8"
   },
   {
@@ -69,7 +69,7 @@
    "country": "싱가폴",
    "region": "아시아",
    "star": false,
-   "mgr": "",
+   "mgr": "박진우",
    "k": "s9"
   },
   {
@@ -78,7 +78,7 @@
    "country": "필리핀",
    "region": "아시아",
    "star": false,
-   "mgr": "",
+   "mgr": "정진아",
    "k": "s11"
   },
   {
@@ -87,7 +87,7 @@
    "country": "자카르타",
    "region": "아시아",
    "star": false,
-   "mgr": "",
+   "mgr": "박진우",
    "k": "s12"
   },
   {
@@ -123,7 +123,7 @@
    "country": "말레이시아",
    "region": "아시아",
    "star": false,
-   "mgr": "",
+   "mgr": "이창환",
    "k": "s16"
   },
   {
@@ -132,7 +132,7 @@
    "country": "태국",
    "region": "아시아",
    "star": false,
-   "mgr": "",
+   "mgr": "여동은",
    "k": "s17"
   },
   {
@@ -195,7 +195,7 @@
    "country": "카타르",
    "region": "중동",
    "star": true,
-   "mgr": "",
+   "mgr": "박인혁",
    "k": "s24"
   },
   {
@@ -204,7 +204,7 @@
    "country": "사우디",
    "region": "중동",
    "star": true,
-   "mgr": "",
+   "mgr": "박인혁",
    "k": "s25"
   },
   {
@@ -213,7 +213,7 @@
    "country": "UAE",
    "region": "중동",
    "star": false,
-   "mgr": "",
+   "mgr": "박인혁",
    "k": "s26"
   },
   {
@@ -222,7 +222,7 @@
    "country": "UAE",
    "region": "중동",
    "star": true,
-   "mgr": "",
+   "mgr": "박인혁",
    "k": "s27"
   },
   {
@@ -231,7 +231,7 @@
    "country": "UAE",
    "region": "중동",
    "star": false,
-   "mgr": "",
+   "mgr": "박인혁",
    "k": "s28"
   },
   {
@@ -240,7 +240,7 @@
    "country": "오만",
    "region": "중동",
    "star": true,
-   "mgr": "",
+   "mgr": "박인혁",
    "k": "s29"
   },
   {
@@ -249,7 +249,7 @@
    "country": "케냐",
    "region": "아프리카",
    "star": false,
-   "mgr": "",
+   "mgr": "김유진",
    "k": "s30"
   },
   {
@@ -258,7 +258,7 @@
    "country": "호주",
    "region": "오세아니아",
    "star": false,
-   "mgr": "",
+   "mgr": "여동은",
    "k": "s31"
   },
   {
@@ -267,7 +267,7 @@
    "country": "호주",
    "region": "오세아니아",
    "star": false,
-   "mgr": "",
+   "mgr": "여동은",
    "k": "s32"
   },
   {
@@ -276,7 +276,7 @@
    "country": "러시아",
    "region": "유럽",
    "star": false,
-   "mgr": "",
+   "mgr": "김유진",
    "k": "s34"
   },
   {
@@ -285,7 +285,7 @@
    "country": "러시아",
    "region": "유럽",
    "star": false,
-   "mgr": "",
+   "mgr": "김유진",
    "k": "s35"
   },
   {
@@ -294,7 +294,7 @@
    "country": "미국",
    "region": "북미",
    "star": false,
-   "mgr": "",
+   "mgr": "강대현",
    "k": "s37"
   },
   {
@@ -375,7 +375,7 @@
    "country": "미국",
    "region": "북미",
    "star": false,
-   "mgr": "",
+   "mgr": "강대현",
    "k": "s46"
   },
   {
@@ -429,7 +429,7 @@
    "country": "코스타리카",
    "region": "중남미",
    "star": false,
-   "mgr": "",
+   "mgr": "박세연",
    "k": "s52"
   },
   {
@@ -447,7 +447,7 @@
    "country": "온두라스",
    "region": "중남미",
    "star": false,
-   "mgr": "",
+   "mgr": "박세연",
    "k": "s54"
   },
   {
@@ -456,7 +456,7 @@
    "country": "퀴라소",
    "region": "중남미",
    "star": false,
-   "mgr": "",
+   "mgr": "박세연",
    "k": "s55"
   },
   {
@@ -492,7 +492,7 @@
    "country": "베네수엘라",
    "region": "중남미",
    "star": false,
-   "mgr": "",
+   "mgr": "박세연",
    "k": "s59"
   },
   {
@@ -510,7 +510,7 @@
    "country": "과테말라",
    "region": "중남미",
    "star": false,
-   "mgr": "",
+   "mgr": "박세연",
    "k": "s64"
   },
   {
@@ -528,7 +528,7 @@
    "country": "베네수엘라",
    "region": "중남미",
    "star": false,
-   "mgr": "",
+   "mgr": "박세연",
    "k": "s66"
   },
   {
@@ -537,7 +537,7 @@
    "country": "도미니카 공화국",
    "region": "중남미",
    "star": false,
-   "mgr": "",
+   "mgr": "박세연",
    "k": "s67"
   },
   {
@@ -546,7 +546,7 @@
    "country": "에콰도르",
    "region": "중남미",
    "star": false,
-   "mgr": "",
+   "mgr": "박세연",
    "k": "s68"
   },
   {
@@ -555,7 +555,7 @@
    "country": "콜롬비아",
    "region": "중남미",
    "star": false,
-   "mgr": "",
+   "mgr": "박세연",
    "k": "s69"
   },
   {
@@ -564,7 +564,7 @@
    "country": "자메이카",
    "region": "중남미",
    "star": false,
-   "mgr": "",
+   "mgr": "박세연",
    "k": "s70"
   },
   {
@@ -582,7 +582,7 @@
    "country": "중국",
    "region": "아시아",
    "star": false,
-   "mgr": "",
+   "mgr": "이지수",
    "k": "s72"
   },
   {
@@ -603,5 +603,5 @@
   "퍼시스 12COS COS (중복 행)",
   "퍼시스 COR (코드 없는 중복 행)"
  ],
- "updated": "2026-10-08T06:19:14.911523Z"
+ "updated": "2026-10-13T03:34:26.031653Z"
 }
