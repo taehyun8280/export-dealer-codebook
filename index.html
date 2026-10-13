@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>수출 거래처 코드북</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: search bar on top, filterable ledger on the left, a shipping-label style detail card pinned on the right; tabs for 지역별 / 일괄 조회 */
+:root{
+  --bg:#EEF2F4; --surface:#FFFFFF; --sunken:#F5F8F9; --ink:#14212B; --muted:#5A6873; --faint:#8995A0; --line:#D8E0E5;
+  --accent:#0D6680; --accent-soft:#DCEDF2; --warn:#9A5B0B; --warn-soft:#FBEFD9;
+  --b-fursys:#2C5BA6; --b-fursys-soft:#E1E9F6; --b-sidiz:#B0502A; --b-sidiz-soft:#F7E5DD; --b-iloom:#357F53; --b-iloom-soft:#DFF0E5;
+  --font-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F171C; --surface:#162229; --sunken:#1B2932; --ink:#E5ECF0; --muted:#9BABB6; --faint:#6E7F8A; --line:#2A3A44;
+  --accent:#4FB4D2; --accent-soft:#163846; --warn:#E7B05C; --warn-soft:#3A2C14;
+  --b-fursys:#7FA6E6; --b-fursys-soft:#1D2D48; --b-sidiz:#E9946E; --b-sidiz-soft:#43271C; --b-iloom:#7CC897; --b-iloom-soft:#1C3726;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F171C; --surface:#162229; --sunken:#1B2932; --ink:#E5ECF0; --muted:#9BABB6; --faint:#6E7F8A; --line:#2A3A44;
+  --accent:#4FB4D2; --accent-soft:#163846; --warn:#E7B05C; --warn-soft:#3A2C14;
+  --b-fursys:#7FA6E6; --b-fursys-soft:#1D2D48; --b-sidiz:#E9946E; --b-sidiz-soft:#43271C; --b-iloom:#7CC897; --b-iloom-soft:#1C3726;
+  color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:14px;line-height:1.55;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 56px}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;margin-bottom:18px}
+h1{font-size:24px;font-weight:700;letter-spacing:-.01em;margin:0;text-wrap:balance}
+.sub{color:var(--muted);font-size:13px;margin-top:4px}
+.stats{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+.stats b{font-family:var(--font-mono);font-size:17px;color:var(--ink);font-weight:600;margin-right:3px;font-variant-numeric:tabular-nums}
+.mono{font-family:var(--font-mono)}
+
+.search{position:relative;margin-bottom:12px}
+.search input{width:100%;font:500 18px var(--font-body);padding:15px 52px 15px 48px;border:1.5px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);outline:none;transition:border-color .15s}
+.search input:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.search input::placeholder{color:var(--faint);font-weight:400;font-size:15px}
+.search svg{position:absolute;left:17px;top:50%;transform:translateY(-50%);color:var(--faint)}
+.search .kbd{position:absolute;right:14px;top:50%;transform:translateY(-50%);font:500 11px var(--font-mono);color:var(--faint);border:1px solid var(--line);border-radius:5px;padding:2px 7px}
+.search .clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);border:0;background:var(--sunken);color:var(--muted);border-radius:6px;padding:4px 9px;font:inherit;font-size:12px;cursor:pointer}
+
+.filters{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin-bottom:16px}
+.fgroup{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.flabel{font-size:11px;letter-spacing:.06em;color:var(--faint);font-weight:600;margin-right:2px}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:4px 11px;font:500 12.5px var(--font-body);cursor:pointer;transition:all .12s}
+.chip:hover{border-color:var(--accent);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.chip:focus-visible,.tab:focus-visible,button:focus-visible,tr:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin-bottom:16px;overflow-x:auto}
+.tab{border:0;background:none;color:var(--muted);font:600 14px var(--font-body);padding:10px 14px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start}
+@media (max-width:880px){.grid{grid-template-columns:1fr}.detail{position:static!important;order:-1}}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;font-size:11px;letter-spacing:.06em;color:var(--faint);font-weight:600;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;position:sticky;top:0;background:var(--surface)}
+td{padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap;vertical-align:middle}
+tbody tr{cursor:pointer}
+tbody tr:hover td{background:var(--sunken)}
+tbody tr.sel td{background:var(--accent-soft)}
+tbody tr:last-child td{border-bottom:0}
+.code{font-family:var(--font-mono);font-weight:600;font-variant-numeric:tabular-nums}
+.code .pre{color:var(--faint);font-weight:500}
+.none{color:var(--faint);font-style:normal}
+.missing{color:var(--warn);background:var(--warn-soft);padding:1px 7px;border-radius:4px;font-size:12px}
+.badge{display:inline-block;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:4px}
+.b-퍼시스{color:var(--b-fursys);background:var(--b-fursys-soft)}
+.b-시디즈{color:var(--b-sidiz);background:var(--b-sidiz-soft)}
+.b-일룸{color:var(--b-iloom);background:var(--b-iloom-soft)}
+.mgr{color:var(--muted);font-size:12.5px}
+.mgr .arrow{color:var(--faint);margin:0 4px}
+.resultbar{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line);font-size:12.5px;color:var(--muted);gap:8px;flex-wrap:wrap}
+mark{background:none;color:var(--accent);font-weight:700}
+.empty{padding:36px 16px;text-align:center;color:var(--muted)}
+
+/* Detail card styled like a shipping label */
+.detail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);overflow:hidden}
+.label-head{padding:16px 18px 14px;border-bottom:1.5px dashed var(--line);display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.label-k{font-size:10.5px;letter-spacing:.09em;color:var(--faint);font-weight:600}
+.bigcode{font:600 30px/1.15 var(--font-mono);letter-spacing:.01em;margin-top:2px;word-break:break-all}
+.bigcode .pre{color:var(--faint);font-weight:500}
+.country-row{padding:16px 18px;background:var(--sunken);border-bottom:1px solid var(--line)}
+.country{font-size:26px;font-weight:700;letter-spacing:-.01em;line-height:1.25}
+.country.na{font-size:16px;font-weight:600;color:var(--warn)}
+.country-sub{color:var(--muted);font-size:13px;margin-top:2px}
+dl{margin:0;padding:6px 18px 14px;display:grid;grid-template-columns:auto 1fr;gap:0 14px}
+dt{font-size:12px;color:var(--faint);padding:9px 0;border-bottom:1px solid var(--line)}
+dd{margin:0;padding:9px 0;border-bottom:1px solid var(--line);font-weight:500;text-align:right;min-width:0;overflow-wrap:anywhere}
+dl > :nth-last-child(-n+2){border-bottom:0}
+.note{margin:0 18px 16px;padding:10px 12px;border-radius:8px;background:var(--warn-soft);color:var(--warn);font-size:12.5px;line-height:1.5}
+.note.info{background:var(--accent-soft);color:var(--accent)}
+.note a,.linkbtn{color:inherit;text-decoration:underline;cursor:pointer;background:none;border:0;padding:0;font:inherit;font-weight:600}
+.copy{border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:7px;padding:5px 10px;font:500 12px var(--font-body);cursor:pointer;white-space:nowrap}
+.copy:hover{color:var(--ink);border-color:var(--accent)}
+.detail-empty{padding:32px 20px;color:var(--muted);text-align:center;font-size:13.5px}
+
+/* Region view */
+.regions{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.region{padding:14px 16px}
+.region h3{margin:0 0 10px;font-size:15px;display:flex;justify-content:space-between;align-items:baseline}
+.region h3 span{font:500 12px var(--font-mono);color:var(--faint)}
+.crow{display:grid;grid-template-columns:96px 1fr;gap:10px;padding:7px 0;border-top:1px solid var(--line);align-items:start}
+.crow:first-of-type{border-top:0}
+.cname{font-weight:600;font-size:13px;padding-top:2px}
+.cname.na{color:var(--warn);font-weight:500;font-size:12px}
+.codes{display:flex;flex-wrap:wrap;gap:5px}
+.cc{font:600 12px var(--font-mono);border:1px solid var(--line);background:var(--sunken);color:var(--ink);border-radius:5px;padding:2px 7px;cursor:pointer}
+.cc:hover{border-color:var(--accent);color:var(--accent)}
+.cc.b16{border-left:3px solid var(--b-sidiz)}.cc.b17{border-left:3px solid var(--b-iloom)}.cc.b12{border-left:3px solid var(--b-fursys)}
+
+/* Bulk */
+.bulk{display:grid;grid-template-columns:300px minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:880px){.bulk{grid-template-columns:1fr}}
+.bulk textarea{width:100%;min-height:260px;font:500 14px/1.6 var(--font-mono);padding:12px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);resize:vertical;outline:none}
+.bulk textarea:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.help{font-size:12.5px;color:var(--muted);margin:8px 0 0}
+tr.nf td{color:var(--warn)}
+
+.foot{margin-top:28px;font-size:12.5px;color:var(--muted);line-height:1.7}
+.foot h4{font-size:12px;letter-spacing:.06em;color:var(--faint);margin:0 0 6px}
+.foot ul{margin:0;padding-left:18px}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:8px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:560px){.wrap{padding:20px 16px 48px}.search .kbd{display:none}.hide-sm{display:none}.bigcode{font-size:26px}.crow{grid-template-columns:80px 1fr}}
+[hidden]{display:none!important}
+/* Inline 딜러담당자 input */
+td.mgr-cell{padding:4px 8px}
+.mgr-in{width:100%;min-width:110px;font:500 13.5px var(--font-body);padding:5px 8px;border:1px dashed var(--line);border-radius:6px;background:transparent;color:var(--ink);outline:none}
+.mgr-in::placeholder{color:var(--faint)}
+.mgr-in:hover{border-style:solid;border-color:var(--accent)}
+.mgr-in:focus{border-style:solid;border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 3px var(--accent-soft)}
+.mgr-in.pending{border-style:solid;border-color:var(--accent);background:var(--accent-soft)}
+dd .mgr-in{text-align:right}
+/* Edit mode */
+.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:7px;padding:6px 12px;font:600 12.5px var(--font-body);cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.btn.primary:disabled{opacity:.45;cursor:default}
+.btn.ghost{border-color:transparent;background:none;color:var(--muted)}
+.actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.editbar{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.status{font-size:12px;color:var(--muted)}
+.status.err{color:var(--warn)}
+td.ed{padding:4px 6px}
+td.ed input{width:100%;min-width:84px;font:500 13.5px var(--font-body);padding:5px 7px;border:1px solid var(--line);border-radius:5px;background:var(--surface);color:var(--ink);outline:none}
+td.ed input.code-in{font-family:var(--font-mono);font-weight:600;min-width:96px}
+td.ed input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+td.ed input.changed{background:var(--accent-soft);border-color:var(--accent)}
+td.ed input.dup{border-color:var(--warn);background:var(--warn-soft)}
+tr.removed td{opacity:.45}
+tr.removed td.ed input{text-decoration:line-through}
+tr.added td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
+.rm{border:0;background:none;color:var(--faint);cursor:pointer;font:600 12px var(--font-body);padding:4px 6px;border-radius:5px;white-space:nowrap}
+.rm:hover{color:var(--warn);background:var(--warn-soft)}
+tr.removed .rm{color:var(--accent)}
+
+/* ===== Visual refresh: navy header band, crisp contrast, color-coded regions ===== */
+:root{
+  --bg:#EDF1F6; --surface:#FFFFFF; --sunken:#F4F7FB; --ink:#0D1B2E; --muted:#4F5D70; --faint:#8A97A8; --line:#DCE3EC;
+  --accent:#1767D2; --accent-soft:#E3EEFC; --warn:#B4600B; --warn-soft:#FDF0DE;
+  --hero:#0E2342; --hero-2:#163763; --hero-ink:#F3F7FD; --hero-muted:#A9BBD6;
+  --shadow:0 1px 2px rgba(13,27,46,.06),0 6px 18px rgba(13,27,46,.06);
+  --rg0:#2F7BE0; --rg1:#D97B12; --rg2:#4C9A2A; --rg3:#0F9D9A; --rg4:#7A5AE0; --rg5:#D9434F; --rg6:#C0399A; --rgx:#7D8796;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0B131D; --surface:#121D2A; --sunken:#172433; --ink:#E8EEF6; --muted:#A3B1C2; --faint:#6F7F92; --line:#24354A;
+  --accent:#5EA2F5; --accent-soft:#16304F; --warn:#F0B260; --warn-soft:#3A2A14;
+  --hero:#0F2440; --hero-2:#1A3A66; --hero-ink:#F3F7FD; --hero-muted:#9FB3D1;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 22px rgba(0,0,0,.25);
+  --rg0:#6AA6F2; --rg1:#F0A24A; --rg2:#7DC25A; --rg3:#3CC7C3; --rg4:#A58CF2; --rg5:#F07780; --rg6:#E472C3; --rgx:#97A2B1;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B131D; --surface:#121D2A; --sunken:#172433; --ink:#E8EEF6; --muted:#A3B1C2; --faint:#6F7F92; --line:#24354A;
+  --accent:#5EA2F5; --accent-soft:#16304F; --warn:#F0B260; --warn-soft:#3A2A14;
+  --hero:#0F2440; --hero-2:#1A3A66; --hero-ink:#F3F7FD; --hero-muted:#9FB3D1;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 22px rgba(0,0,0,.25);
+  --rg0:#6AA6F2; --rg1:#F0A24A; --rg2:#7DC25A; --rg3:#3CC7C3; --rg4:#A58CF2; --rg5:#F07780; --rg6:#E472C3; --rgx:#97A2B1;
+  color-scheme:dark}
+body{background:var(--bg)}
+.wrap{padding-top:22px}
+
+/* Header band */
+header.top{background:var(--hero);background-image:radial-gradient(circle at 1px 1px,rgba(255,255,255,.07) 1px,transparent 0),linear-gradient(120deg,var(--hero) 0%,var(--hero-2) 100%);background-size:18px 18px,100% 100%;
+  color:var(--hero-ink);border-radius:16px;padding:26px 28px 58px;margin-bottom:0;align-items:center}
+h1{font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--hero-ink)}
+.eyebrow{font:600 11px var(--font-mono);letter-spacing:.14em;color:var(--hero-muted);margin-bottom:6px}
+.stats{gap:10px}
+.stats span{display:flex;flex-direction:column;align-items:flex-start;gap:2px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 14px;color:var(--hero-muted);font-size:11.5px;min-width:92px}
+.stats b{font-size:22px;color:var(--hero-ink);margin:0;line-height:1.1}
+.stats b small{font:600 14px var(--font-body);margin-left:3px;color:var(--hero-ink)}
+
+/* Search floats over the band */
+.search{margin:-30px 18px 18px;z-index:1}
+.search input{border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(13,27,46,.16);font-size:17px;padding-block:16px}
+.search input:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft),0 10px 30px rgba(13,27,46,.16)}
+
+/* Region filter chips with color dots */
+.filters{margin-bottom:14px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-weight:600;padding:5px 12px;box-shadow:0 1px 1px rgba(13,27,46,.04)}
+.chip .dot{width:8px;height:8px;border-radius:50%;background:var(--c,var(--faint))}
+.chip[aria-pressed="true"]{background:var(--c,var(--ink));border-color:var(--c,var(--ink));color:#fff}
+.chip[aria-pressed="true"] .dot{background:#fff}
+
+/* Tabs as a segmented control */
+.tabs{border-bottom:0;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:4px;display:inline-flex;margin-bottom:16px;max-width:100%}
+.tab{border-bottom:0;margin:0;border-radius:8px;padding:8px 16px;font-size:13.5px}
+.tab[aria-selected="true"]{background:var(--hero);color:var(--hero-ink)}
+
+/* Panels and table */
+.panel{border-color:var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.panel > .tablewrap{border-radius:0 0 14px 14px}
+.resultbar{padding:12px 16px;font-size:13px}
+#count{font-weight:700;color:var(--ink)}
+th{background:var(--sunken);color:var(--muted);font-size:11.5px;padding:11px 14px;border-bottom:1px solid var(--line)}
+td{padding:10px 14px;font-size:14px}
+tbody tr:nth-child(even) td{background:color-mix(in srgb,var(--sunken) 55%,var(--surface))}
+tbody tr:hover td{background:var(--accent-soft)}
+tbody tr.sel td{background:var(--accent-soft)}
+tbody tr.sel td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
+td.code{color:var(--c,var(--accent));font-size:14px;letter-spacing:.01em}
+td.country-cell{font-weight:600}
+.rpill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 10px 3px 8px;border-radius:999px;color:var(--c);background:color-mix(in srgb,var(--c) 13%,transparent)}
+.rpill::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--c)}
+.mgr-in{border:1px solid transparent;background:transparent}
+.mgr-in:hover{border-color:var(--line)}
+
+/* Detail card */
+.side{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);display:flex;flex-direction:column;gap:12px;min-width:0;max-height:calc(100vh - 24px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}
+.side > .panel{display:flex;flex-direction:column;min-height:0}
+.side > .panel.mgr-panel{flex:1 1 auto}
+.side > .panel.reg-panel{flex:none}
+.side .mgr-panel .sp-list{overflow-y:auto;min-height:0;flex:1 1 auto}
+@media (max-width:880px){.side{position:static;max-height:none}}
+.sp-head{padding:12px 16px 10px;border-bottom:1px solid var(--line)}
+.sp-title{font-size:15px;font-weight:700;color:var(--ink);display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.sp-title small{font:500 12px var(--font-body);color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--sunken);overflow:hidden;margin-top:10px;border:1px solid var(--line)}
+.prog i{display:block;height:100%;background:var(--accent);border-radius:999px}
+.sp-list{list-style:none;margin:0;padding:4px 6px 8px}
+.sp-item{width:100%;display:grid;grid-template-columns:88px minmax(0,1fr) 30px;gap:10px;align-items:center;padding:6px 10px;border:0;border-radius:9px;background:none;color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.sp-item:hover{background:var(--sunken)}
+.sp-item[aria-pressed="true"]{background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent)}
+.sp-name{font-weight:600;font-size:13.5px;display:flex;align-items:center;gap:7px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sp-name .dot{width:8px;height:8px;border-radius:50%;background:var(--c);flex:none}
+.sp-n{font:600 13px var(--font-mono);color:var(--muted);font-variant-numeric:tabular-nums;text-align:right;order:3}
+.sp-bar{height:8px;order:2;border-radius:999px;background:var(--sunken)}
+.sp-bar i{display:block;height:100%;border-radius:999px;background:var(--c,var(--accent))}
+.sp-item.none .sp-name{color:var(--warn)}
+.sp-item.none{--c:var(--warn)}
+.sp-empty{padding:12px 18px 16px;color:var(--muted);font-size:13px}
+.sp-clear{border:0;background:none;color:var(--accent);font:600 12px var(--font-body);cursor:pointer;padding:0}
+.label-head{background:var(--hero);background-image:linear-gradient(120deg,var(--hero),var(--hero-2));border-bottom:0;padding:18px 20px}
+.label-head .label-k{color:var(--hero-muted)}
+.bigcode{color:var(--hero-ink);font-size:32px}
+.label-head .copy{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25);color:var(--hero-ink)}
+.label-head .copy:hover{background:rgba(255,255,255,.2)}
+.country-row{background:var(--surface);border-bottom:1px solid var(--line);padding:18px 20px}
+.country{font-size:30px;letter-spacing:-.02em}
+.country-sub{margin-top:8px}
+dl{padding:4px 20px 14px}
+dt{font-size:12.5px}
+dd{font-weight:600}
+
+/* Region view */
+.region{padding:0;overflow:hidden}
+.region h3{margin:0;padding:12px 16px;background:color-mix(in srgb,var(--c) 12%,var(--surface));color:var(--ink);border-bottom:1px solid var(--line);font-size:15px}
+.region h3 .rname{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:16px;color:var(--ink);letter-spacing:-.01em}
+.region h3 .rname::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--c)}
+.region h3 span.n{font:600 12px var(--font-mono);color:var(--c);background:var(--surface);border-radius:999px;padding:2px 9px}
+.region .crow{padding:8px 16px}
+.cc{background:var(--surface);color:var(--c,var(--accent));border-color:color-mix(in srgb,var(--c,var(--accent)) 35%,var(--line))}
+.cc:hover{background:var(--c,var(--accent));color:#fff;border-color:var(--c,var(--accent))}
+td.code mark{color:inherit;background:color-mix(in srgb,var(--c,var(--accent)) 18%,transparent);border-radius:3px}
+
+/* Edit bar */
+.editbar{background:var(--accent-soft)}
+.btn.primary{box-shadow:0 2px 6px color-mix(in srgb,var(--accent) 35%,transparent)}
+
+@media (max-width:560px){header.top{padding:20px 18px 52px}h1{font-size:23px}.stats span{min-width:0;padding:6px 10px}.stats b{font-size:18px}.search{margin-inline:8px}}
+</style>
+
+</head><body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow">EXPORT · DEALER CODES</div>
+      <h1>수출 거래처 코드북</h1>
+    </div>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <div class="search">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+    <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="거래처코드 · 거래처 · 국가 · 딜러담당자  (예: 12RF, AIO, 미국)" aria-label="검색">
+    <span class="kbd" id="kbd">/</span>
+    <button class="clear" id="clear" hidden>지우기</button>
+  </div>
+
+  <div class="filters">
+    <div class="fgroup" id="fRegion"><span class="flabel">지역</span></div>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="t-list" aria-selected="true" data-tab="list">코드 조회</button>
+    <button class="tab" role="tab" id="t-region" aria-selected="false" data-tab="region">지역·국가별</button>
+  </div>
+
+  <section id="v-list">
+    <div class="grid" id="listGrid">
+      <div class="panel">
+        <div class="resultbar" id="viewBar">
+          <span id="count"></span>
+          <div class="actions"><span class="status" id="saveInfo"></span><button class="btn" id="copyAll">전체 복사 (엑셀용)</button><button class="btn" id="editBtn" hidden>수정하기</button></div>
+        </div>
+        <div class="resultbar editbar" id="editBar" hidden>
+          <span id="dirtyInfo">편집 중</span>
+          <div class="actions">
+            <span class="status" id="saveStatus" role="status" aria-live="polite"></span>
+            <button class="btn" id="addBtn">+ 행 추가</button>
+            <button class="btn ghost" id="cancelBtn">취소</button>
+            <button class="btn primary" id="saveBtn" disabled>저장</button>
+          </div>
+        </div>
+        <div class="tablewrap">
+          <table>
+            <thead><tr id="headRow"><th>거래처코드</th><th>거래처</th><th>국가</th><th>지역</th><th>딜러담당자</th></tr></thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+        <div class="empty" id="empty" hidden>일치하는 거래처가 없습니다. 코드 앞의 12를 빼고 검색해 보세요.</div>
+      </div>
+      <aside class="side" id="side"></aside>
+    </div>
+  </section>
+
+  <section id="v-region" hidden>
+    <div class="regions" id="regions"></div>
+  </section>
+
+
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<datalist id="dlCountry"></datalist>
+<datalist id="dlRegion"></datalist>
+<datalist id="dlMgr"></datalist>
+
+<script>
+const SEED = {"rows": [{"code": "12RF", "dealer": "RF", "country": "일본", "region": "아시아", "star": false, "mgr": "", "k": "s0"}, {"code": "12UY", "dealer": "UY", "country": "일본", "region": "아시아", "star": false, "mgr": "", "k": "s1"}, {"code": "12JIS", "dealer": "JIS/JAEI", "country": "중국", "region": "아시아", "star": false, "mgr": "", "k": "s2"}, {"code": "12CENO", "dealer": "CENO", "country": "베트남", "region": "아시아", "star": false, "mgr": "", "k": "s5"}, {"code": "12HMI", "dealer": "HMI", "country": "인도", "region": "아시아", "star": false, "mgr": "", "k": "s6"}, {"code": "12SHAN", "dealer": "SHAN", "country": "중국", "region": "아시아", "star": false, "mgr": "", "k": "s7"}, {"code": "12COR", "dealer": "COR", "country": "인도네시아", "region": "아시아", "star": false, "mgr": "", "k": "s8"}, {"code": "12VAN", "dealer": "VAN", "country": "싱가폴", "region": "아시아", "star": false, "mgr": "", "k": "s9"}, {"code": "12AIO", "dealer": "AIO", "country": "필리핀", "region": "아시아", "star": false, "mgr": "", "k": "s11"}, {"code": "12JII", "dealer": "JII", "country": "자카르타", "region": "아시아", "star": false, "mgr": "", "k": "s12"}, {"code": "12DLX", "dealer": "DLX", "country": "파키스탄", "region": "아시아", "star": false, "mgr": "", "k": "s13"}, {"code": "12ILTW", "dealer": "ILTW", "country": "대만", "region": "아시아", "star": false, "mgr": "", "k": "s14"}, {"code": "12APC", "dealer": "APC", "country": "베트남", "region": "아시아", "star": false, "mgr": "", "k": "s15"}, {"code": "12AW", "dealer": "AW", "country": "말레이시아", "region": "아시아", "star": false, "mgr": "", "k": "s16"}, {"code": "12ANUN", "dealer": "ANUN", "country": "태국", "region": "아시아", "star": false, "mgr": "", "k": "s17"}, {"code": "12RS", "dealer": "RS", "country": "스리랑카", "region": "아시아", "star": false, "mgr": "", "k": "s18"}, {"code": "12KAZ", "dealer": "KAZ", "country": "카자흐스탄", "region": "아시아", "star": false, "mgr": "", "k": "s19"}, {"code": "12TAN", "dealer": "TAN", "country": "카자흐스탄", "region": "아시아", "star": false, "mgr": "", "k": "s20"}, {"code": "12KMG", "dealer": "KMG", "country": "카자흐스탄", "region": "아시아", "star": false, "mgr": "", "k": "s21"}, {"code": "12KTNGKZ", "dealer": "KTNGKZ", "country": "카자흐스탄", "region": "아시아", "star": false, "mgr": "", "k": "s22"}, {"code": "12AJD", "dealer": "AJD", "country": "홍콩/필리핀", "region": "아시아", "star": false, "mgr": "", "k": "s23"}, {"code": "12ANP", "dealer": "ANP", "country": "카타르", "region": "중동", "star": true, "mgr": "", "k": "s24"}, {"code": "12RHC", "dealer": "RHC", "country": "사우디", "region": "중동", "star": true, "mgr": "", "k": "s25"}, {"code": "12SPW", "dealer": "SPW", "country": "UAE", "region": "중동", "star": false, "mgr": "", "k": "s26"}, {"code": "12AGE", "dealer": "AGE", "country": "UAE", "region": "중동", "star": true, "mgr": "", "k": "s27"}, {"code": "12ARCO", "dealer": "ARCO", "country": "UAE", "region": "중동", "star": false, "mgr": "", "k": "s28"}, {"code": "12SFO", "dealer": "SFO", "country": "오만", "region": "중동", "star": true, "mgr": "", "k": "s29"}, {"code": "12KEN", "dealer": "KEN", "country": "케냐", "region": "아프리카", "star": false, "mgr": "", "k": "s30"}, {"code": "12DI", "dealer": "DI", "country": "호주", "region": "오세아니아", "star": false, "mgr": "", "k": "s31"}, {"code": "12PUA", "dealer": "PUA", "country": "호주", "region": "오세아니아", "star": false, "mgr": "", "k": "s32"}, {"code": "12EO", "dealer": "EO", "country": "러시아", "region": "유럽", "star": false, "mgr": "", "k": "s34"}, {"code": "12FFE", "dealer": "FFE", "country": "러시아", "region": "유럽", "star": false, "mgr": "", "k": "s35"}, {"code": "12NY", "dealer": "NY", "country": "미국", "region": "북미", "star": false, "mgr": "", "k": "s37"}, {"code": "12IMA", "dealer": "IMA", "country": "미국", "region": "북미", "star": false, "mgr": "", "k": "s38"}, {"code": "12GUAM", "dealer": "GUAM", "country": "미국", "region": "북미", "star": false, "mgr": "", "k": "s39"}, {"code": "12LA", "dealer": "LA", "country": "미국", "region": "북미", "star": false, "mgr": "", "k": "s40"}, {"code": "12MAV", "dealer": "MAV", "country": "미국", "region": "북미", "star": false, "mgr": "", "k": "s41"}, {"code": "12TOF", "dealer": "TOF", "country": "미국", "region": "북미", "star": false, "mgr": "", "k": "s42"}, {"code": "12BIF", "dealer": "BIF", "country": "미국", "region": "북미", "star": false, "mgr": "", "k": "s43"}, {"code": "12CLE", "dealer": "CLE", "country": "미국", "region": "북미", "star": false, "mgr": "", "k": "s44"}, {"code": "12JIMP", "dealer": "JIMP", "country": "미국", "region": "북미", "star": false, "mgr": "", "k": "s45"}, {"code": "12SDA", "dealer": "SDA", "country": "미국", "region": "북미", "star": false, "mgr": "", "k": "s46"}, {"code": "12CLEV", "dealer": "CLEV", "country": "미국", "region": "북미", "star": false, "mgr": "", "k": "s47"}, {"code": "12FAM", "dealer": "FAM", "country": "미국", "region": "북미", "star": false, "mgr": "", "k": "s48"}, {"code": "12INICS", "dealer": "INICS", "country": "멕시코", "region": "북미", "star": false, "mgr": "", "k": "s49"}, {"code": "12CHL", "dealer": "CHL", "country": "칠레", "region": "중남미", "star": false, "mgr": "", "k": "s50"}, {"code": "12COL", "dealer": "COL", "country": "콜롬비아", "region": "중남미", "star": false, "mgr": "", "k": "s51"}, {"code": "12COS", "dealer": "COS", "country": "코스타리카", "region": "중남미", "star": false, "mgr": "", "k": "s52"}, {"code": "12GUA", "dealer": "GUA", "country": "과테말라", "region": "중남미", "star": false, "mgr": "", "k": "s53"}, {"code": "12HON", "dealer": "HON", "country": "온두라스", "region": "중남미", "star": false, "mgr": "", "k": "s54"}, {"code": "12CUR", "dealer": "CUR", "country": "퀴라소", "region": "중남미", "star": false, "mgr": "", "k": "s55"}, {"code": "12JAM", "dealer": "JAM", "country": "자메이카", "region": "중남미", "star": false, "mgr": "", "k": "s56"}, {"code": "12PER", "dealer": "PER", "country": "페루", "region": "중남미", "star": false, "mgr": "", "k": "s57"}, {"code": "12PNM", "dealer": "PNM", "country": "파나마", "region": "중남미", "star": false, "mgr": "", "k": "s58"}, {"code": "12VEN", "dealer": "VEN", "country": "베네수엘라", "region": "중남미", "star": false, "mgr": "", "k": "s59"}, {"code": "12AMRP", "dealer": "AMRP", "country": "인도", "region": "아시아", "star": false, "mgr": "", "k": "s61"}, {"code": "12STUO", "dealer": "STUO", "country": "과테말라", "region": "중남미", "star": false, "mgr": "", "k": "s64"}, {"code": "12FMT", "dealer": "FMT", "country": "페루", "region": "중남미", "star": false, "mgr": "", "k": "s65"}, {"code": "12VFLC", "dealer": "VFLC", "country": "베네수엘라", "region": "중남미", "star": false, "mgr": "", "k": "s66"}, {"code": "12ERG", "dealer": "ERG", "country": "도미니카 공화국", "region": "중남미", "star": false, "mgr": "", "k": "s67"}, {"code": "12LAY", "dealer": "LAY", "country": "에콰도르", "region": "중남미", "star": false, "mgr": "", "k": "s68"}, {"code": "12SAH", "dealer": "SAH", "country": "콜롬비아", "region": "중남미", "star": false, "mgr": "", "k": "s69"}, {"code": "12JSOS", "dealer": "JSOS", "country": "자메이카", "region": "중남미", "star": false, "mgr": "", "k": "s70"}, {"code": "12MEX", "dealer": "MEX", "country": "멕시코", "region": "북미", "star": false, "mgr": "", "k": "s71"}, {"code": "12SCH", "dealer": "SCH", "country": "중국", "region": "아시아", "star": false, "mgr": "", "k": "s72"}, {"code": "12SHMZ", "dealer": "SHMZ", "country": "싱가폴", "region": "아시아", "star": false, "mgr": "", "k": "s73"}], "dropped": ["퍼시스 12SFO SFO (중복 행)", "퍼시스 12STUO STUO (중복 행)", "퍼시스 12PNM PNM (중복 행)", "퍼시스 12CUR CUR (중복 행)", "퍼시스 12COS COS (중복 행)", "퍼시스 COR (코드 없는 중복 행)"], "updated": "2026-10-08T06:19:14.911523Z"};
+const FIELDS=['code','dealer','country','region','mgr'];
+const LABEL={code:'거래처코드',dealer:'거래처',country:'국가',region:'지역',mgr:'딜러담당자'};
+const REGION_ORDER=['아시아','중동','아프리카','오세아니아','유럽','북미','중남미'];
+const regionRank=r=>{const i=REGION_ORDER.indexOf(r);return i<0?(r==='미분류'?99:50):i;};
+const regionColor=r=>{const i=REGION_ORDER.indexOf(r);return i<0?'var(--rgx)':`var(--rg${i})`;};
+const regionPill=r=>r?`<span class="rpill" style="--c:${regionColor(r)}">${esc(r)}</span>`:'<span class="none">—</span>';
+const state={q:'',region:'전체',sel:null,tab:'list',editing:false,canSave:false,mgr:null};
+let ROWS=[], META={};
+let draft=null;
+const pending=new Set(); let qsTimer=null, qsBusy=false; // {byKey:{k:{...}}, added:[k], removed:Set}
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const norm=s=>String(s||'').toUpperCase().replace(/[\s*\-_.]/g,'');
+const newKey=()=>'r'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+
+function loadData(d){
+  ROWS=(d.rows||[]).map((r,i)=>({k:r.k||('s'+i),code:r.code||'',dealer:r.dealer||'',country:r.country||'',region:r.region||'',mgr:r.mgr||'',star:!!r.star}));
+  META={updated:d.updated||'',dropped:d.dropped||[]};
+  // Group by region (fixed order), then keep the same country together in order of first appearance
+  const firstSeen={}; ROWS.forEach((r,i)=>{const key=r.region+'|'+r.country; if(!(key in firstSeen)) firstSeen[key]=i;});
+  ROWS=ROWS.map((r,i)=>({r,i})).sort((x,y)=>regionRank(x.r.region||'미분류')-regionRank(y.r.region||'미분류')
+    || firstSeen[x.r.region+'|'+x.r.country]-firstSeen[y.r.region+'|'+y.r.country] || x.i-y.i).map(x=>x.r);
+}
+loadData(SEED);
+
+function hl(text,q){
+  const t=esc(text); if(!q) return t;
+  const i=String(text).toUpperCase().indexOf(q.toUpperCase());
+  if(i<0) return t;
+  return esc(text.slice(0,i))+'<mark>'+esc(text.slice(i,i+q.length))+'</mark>'+esc(text.slice(i+q.length));
+}
+function mgrHTML(r,q){ return r.mgr?hl(r.mgr,q||''):''; }
+function countryHTML(r){ return r.country?esc(r.country):'<span class="missing">미기재</span>'; }
+
+function score(r,q){
+  if(!q) return 1;
+  const nq=norm(q), code=norm(r.code), dealer=norm(r.dealer), core=code.replace(/^12/,'');
+  if(code && code===nq) return 100;
+  if(core && core===nq) return 95;
+  if(dealer===nq) return 90;
+  if(code.startsWith(nq)||core.startsWith(nq)) return 70;
+  if(dealer.startsWith(nq)) return 60;
+  if(code.includes(nq)||dealer.includes(nq)) return 40;
+  const lq=q.trim();
+  if([r.country,r.region,r.mgr].some(v=>v&&v.includes(lq))) return 30;
+  return 0;
+}
+// In edit mode, rows shown are the draft values (plus added rows on top)
+function workingRows(){
+  if(!state.editing) return ROWS;
+  const added=draft.added.map(k=>draft.byKey[k]);
+  return [...added,...ROWS.map(r=>draft.byKey[r.k]||r)];
+}
+function filtered(){
+  const q=state.q.trim();
+  const rows=workingRows();
+  return rows.map((r,i)=>({r,i,s:score(r,q)}))
+    .filter(x=>(x.s>0||(state.editing&&draft.added.includes(x.r.k))) && (state.region==='전체'||(x.r.region||'미분류')===state.region||(state.editing&&draft.added.includes(x.r.k))) && (state.mgr===null||(state.mgr===''?!x.r.mgr.trim():x.r.mgr.trim()===state.mgr)))
+    .sort((a,b)=>b.s-a.s || a.i-b.i)
+    .map(x=>x.r);
+}
+
+function renderStats(){
+  const countries=new Set(ROWS.filter(r=>r.country).map(r=>r.country));
+  const codes=new Set(ROWS.filter(r=>r.code).map(r=>r.code));
+  const regions=new Set(ROWS.filter(r=>r.region).map(r=>r.region));
+  $('#stats').innerHTML=`<span><b>${codes.size}<small>개</small></b>거래처코드</span><span><b>${countries.size}<small>개</small></b>국가</span><span><b>${regions.size}<small>개</small></b>지역</span>`;
+  const uniq=f=>[...new Set(ROWS.map(r=>r[f]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'ko'));
+  $('#dlCountry').innerHTML=uniq('country').map(v=>`<option value="${esc(v)}">`).join('');
+  $('#dlRegion').innerHTML=uniq('region').map(v=>`<option value="${esc(v)}">`).join('');
+  $('#dlMgr').innerHTML=uniq('mgr').map(v=>`<option value="${esc(v)}">`).join('');
+}
+function renderFilters(){
+  const regions=[...new Set(ROWS.map(r=>r.region||'미분류'))].sort((a,b)=>regionRank(a)-regionRank(b));
+  const el=$('#fRegion');
+  el.querySelectorAll('.chip').forEach(c=>c.remove());
+  ['전체',...regions].forEach(v=>{
+    const b=document.createElement('button');b.className='chip';
+    if(v!=='전체'){b.style.setProperty('--c',regionColor(v));const d=document.createElement('span');d.className='dot';b.appendChild(d);}
+    b.appendChild(document.createTextNode(v));
+    b.setAttribute('aria-pressed',state.region===v);
+    b.onclick=()=>{state.region=v;renderFilters();render();};
+    el.appendChild(b);
+  });
+}
+
+function dupCodes(){
+  const c={}; workingRows().forEach(r=>{if(state.editing&&draft.removed.has(r.k))return;const n=norm(r.code);if(n)c[n]=(c[n]||0)+1;});
+  return c;
+}
+function rowView(r,q){
+  return `<tr data-k="${r.k}" tabindex="0" class="${r.k===state.sel?'sel':''}">
+    <td class="code" style="--c:${regionColor(r.region)}">${r.code?hl(r.code,q):'<span class="none">코드 없음</span>'}</td>
+    <td>${hl(r.dealer,q)}</td>
+    <td class="country-cell">${countryHTML(r)}</td>
+    <td>${regionPill(r.region)}</td>
+    ${state.canSave?`<td class="mgr-cell"><input class="mgr-in ${pending.has(r.k)?'pending':''}" id="m-${r.k}" data-mgr="${r.k}" value="${esc(r.mgr)}" list="dlMgr" aria-label="${esc(r.code||r.dealer)} 딜러담당자"></td>`:`<td class="mgr">${mgrHTML(r,q)}</td>`}</tr>`;
+}
+function rowEdit(r,dups){
+  const orig=ROWS.find(x=>x.k===r.k);
+  const removed=draft.removed.has(r.k), added=draft.added.includes(r.k);
+  const list={country:'dlCountry',region:'dlRegion',mgr:'dlMgr'};
+  const cells=FIELDS.map(f=>{
+    const changed=!added&&orig&&orig[f]!==r[f];
+    const dup=f==='code'&&r.code&&dups[norm(r.code)]>1;
+    return `<td class="ed"><input id="e-${r.k}-${f}" data-k="${r.k}" data-f="${f}" value="${esc(r[f])}" aria-label="${LABEL[f]}" ${list[f]?`list="${list[f]}"`:''} class="${f==='code'?'code-in ':''}${changed?'changed ':''}${dup?'dup':''}" ${removed?'disabled':''} ${f==='code'?'spellcheck="false"':''} ></td>`;
+  }).join('');
+  return `<tr data-k="${r.k}" class="${removed?'removed':''} ${added?'added':''} ${r.k===state.sel?'sel':''}">${cells}<td class="ed"><button class="rm" data-rm="${r.k}">${removed?'되돌리기':'삭제'}</button></td></tr>`;
+}
+
+function render(){
+  const list=filtered();
+  const q=state.q.trim();
+  $('#count').textContent=q||state.region!=='전체'||state.mgr!==null?`${list.length}건 일치`:`전체 ${list.length}건`;
+  $('#empty').hidden=list.length>0;
+  $('#headRow').innerHTML=FIELDS.map(f=>`<th>${LABEL[f]}</th>`).join('')+(state.editing?'<th></th>':'');
+  if(state.editing){
+    const dups=dupCodes();
+    $('#rows').innerHTML=list.map(r=>rowEdit(r,dups)).join('');
+  }else{
+    if(q && list.length && score(list[0],q)>=90) state.sel=list[0].k;
+    else if(state.sel!==null && !list.some(r=>r.k===state.sel)) state.sel=list.length?list[0].k:null;
+    if(state.sel===null && list.length) state.sel=list[0].k;
+    $('#rows').innerHTML=list.map(r=>rowView(r,q)).join('');
+  }
+  $('#listGrid').style.gridTemplateColumns=state.editing?'minmax(0,1fr)':'';
+  $('#side').hidden=state.editing;
+  $('#viewBar').hidden=state.editing; $('#editBar').hidden=!state.editing;
+  $('#editBtn').hidden=!state.canSave;
+  if(!pending.size&&!qsBusy) $('#saveInfo').textContent=META.updated?`업데이트 ${fmtDate(META.updated)}`:(state.canSave?'딜러담당자 칸에 바로 입력하면 자동 저장됩니다':'');
+  if(state.editing) updateDirty(); else renderSide();
+  if(state.tab==='region') renderRegions();
+}
+function fmtDate(iso){try{const d=new Date(iso);return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;}catch(e){return '';}}
+
+function renderSide(){
+  const el=$('#side'); if(!el) return;
+  const total=ROWS.length, byM={}; let none=0;
+  ROWS.forEach(r=>{const m=(r.mgr||'').trim(); if(m) byM[m]=(byM[m]||0)+1; else none++;});
+  const mgrs=Object.entries(byM).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0],'ko'));
+  const done=total-none, maxM=Math.max(1,none,...mgrs.map(m=>m[1]));
+  const item=(key,label,n,max,cls,active)=>`<li><button class="sp-item ${cls||''}" data-mgrf="${esc(key)}" aria-pressed="${active}">
+      <span class="sp-name">${label}</span><span class="sp-n">${n}</span><span class="sp-bar"><i style="width:${Math.round(n/max*100)}%"></i></span></button></li>`;
+  const mgrHtml=`<section class="panel mgr-panel">
+    <div class="sp-head"><div class="sp-title">딜러담당자 현황 ${state.mgr!==null?'<button class="sp-clear" data-mgrf="__all">필터 해제</button>':`<small>${done} / ${total} 지정</small>`}</div>
+      <div class="prog" title="담당자 지정 ${done}/${total}"><i style="width:${total?Math.round(done/total*100):0}%"></i></div></div>
+    ${mgrs.length?'':'<div class="sp-empty">지정된 딜러담당자가 없습니다.</div>'}
+    <ul class="sp-list">${mgrs.map(([m,n])=>item(m,esc(m),n,maxM,'',state.mgr===m)).join('')}
+      ${none?item('','담당자 없음',none,maxM,'none',state.mgr===''):''}</ul></section>`;
+  const byR={}; ROWS.forEach(r=>{const k=r.region||'미분류';byR[k]=(byR[k]||0)+1;});
+  const regs=Object.entries(byR).sort((a,b)=>b[1]-a[1]||regionRank(a[0])-regionRank(b[0]));
+  const maxR=Math.max(1,...regs.map(r=>r[1]));
+  const regHtml=`<section class="panel reg-panel">
+    <div class="sp-head"><div class="sp-title">지역별 분포 ${state.region!=='전체'?'<button class="sp-clear" data-regf="전체">필터 해제</button>':`<small>${regs.length}개 지역</small>`}</div></div>
+    <ul class="sp-list">${regs.map(([k,n])=>`<li><button class="sp-item" style="--c:${regionColor(k)}" data-regf="${esc(k)}" aria-pressed="${state.region===k}">
+      <span class="sp-name"><span class="dot"></span>${esc(k)}</span><span class="sp-n">${n}</span><span class="sp-bar"><i style="width:${Math.round(n/maxR*100)}%"></i></span></button></li>`).join('')}</ul></section>`;
+  el.innerHTML=mgrHtml+regHtml;
+}
+
+function renderRegions(){
+  const list=filtered();
+  const byR={};
+  list.forEach(r=>{const k=r.region||'미분류';(byR[k]=byR[k]||{});const c=r.country||'';(byR[k][c]=byR[k][c]||[]).push(r);});
+  const keys=Object.keys(byR).sort((a,b)=>regionRank(a)-regionRank(b));
+  $('#regions').innerHTML=keys.length?keys.map(k=>{
+    const cs=Object.keys(byR[k]).sort((a,b)=>(a===''?1:0)-(b===''?1:0)||byR[k][b].length-byR[k][a].length||a.localeCompare(b,'ko'));
+    const n=cs.reduce((s,c)=>s+byR[k][c].length,0);
+    return `<div class="panel region" style="--c:${regionColor(k)}"><h3><span class="rname">${esc(k)}</span><span class="n">${n}</span></h3>${cs.map(c=>`
+      <div class="crow"><div class="cname ${c?'':'na'}">${c?esc(c):'국가 미기재'}</div>
+      <div class="codes">${byR[k][c].map(r=>`<button class="cc" style="--c:${regionColor(r.region)}" data-go="${r.k}" title="${esc(r.dealer)}${r.mgr?' · '+esc(r.mgr):''}">${esc(r.code||r.dealer)}</button>`).join('')}</div></div>`).join('')}</div>`;
+  }).join(''):'<div class="empty">일치하는 거래처가 없습니다.</div>';
+}
+
+function lookup(token){
+  const n=norm(token);
+  let m=ROWS.filter(r=>norm(r.code)===n);
+  if(!m.length) m=ROWS.filter(r=>norm(r.code).replace(/^12/,'')===n || norm(r.dealer)===n);
+  return m;
+}
+
+/* ---------- editing ---------- */
+function startEdit(focusKey,field){
+  if(!state.canSave) return;
+  if(pending.size){clearTimeout(qsTimer);quickSave();}
+  draft={byKey:{},added:[],removed:new Set()};
+  state.editing=true; setTab('list');
+  if(focusKey){state.sel=focusKey;}
+  render();
+  if(focusKey){const i=document.getElementById(`e-${focusKey}-${field||'mgr'}`); if(i){i.scrollIntoView({block:'center'});i.focus();i.select();}}
+}
+function changes(){
+  let n=0;
+  Object.values(draft.byKey).forEach(r=>{
+    if(draft.added.includes(r.k)){ if(!draft.removed.has(r.k)&&FIELDS.some(f=>r[f].trim())) n++; return; }
+    const o=ROWS.find(x=>x.k===r.k); if(!draft.removed.has(r.k)&&o&&FIELDS.some(f=>o[f]!==r[f])) n++;
+  });
+  draft.removed.forEach(k=>{if(!draft.added.includes(k))n++;});
+  return n;
+}
+function updateDirty(){
+  const n=changes();
+  $('#dirtyInfo').textContent=n?`편집 중 · 변경 ${n}건`:'편집 중 · 칸을 눌러 바로 고치세요';
+  $('#saveBtn').disabled=n===0||saving;
+}
+function editRow(k){ if(!draft.byKey[k]){const o=ROWS.find(x=>x.k===k); draft.byKey[k]={...o};} return draft.byKey[k]; }
+let saving=false;
+async function save(){
+  const n=changes(); if(!n||saving) return;
+  const next=[];
+  draft.added.slice().reverse().forEach(k=>{const r=draft.byKey[k]; if(!draft.removed.has(k)&&FIELDS.some(f=>r[f].trim())) next.push(r);});
+  ROWS.forEach(o=>{ if(draft.removed.has(o.k)) return; next.push(draft.byKey[o.k]||o); });
+  const clean=next.map(r=>{const o={k:r.k};FIELDS.forEach(f=>o[f]=String(r[f]||'').trim());if(r.star)o.star=true;return o;});
+  const payload={rows:clean,updated:new Date().toISOString(),dropped:META.dropped};
+  saving=true; $('#saveBtn').disabled=true; setStatus('저장 중…');
+  try{
+    const where=await persist(payload);
+    loadData(payload); state.editing=false; draft=null; saving=false;
+    renderStats(); renderFilters(); render(); renderNotes();
+    showSaved(where); toast(`${n}건 저장됨`);
+  }catch(e){
+    saving=false; updateDirty();
+    const c=e&&e.code;
+    if(c==='conflict'){setStatus('다른 곳에서 먼저 저장해 최신 내용으로 다시 불러옵니다.',true);}
+    else if(c==='rate_limited'){setStatus('저장이 너무 잦습니다. 잠시 후 다시 저장하세요.',true);}
+    else setStatus('저장하지 못했습니다. 잠시 후 다시 시도하세요.',true);
+  }
+}
+function setStatus(t,err){const s=$('#saveStatus');s.textContent=t;s.classList.toggle('err',!!err);}
+function cancelEdit(){state.editing=false;draft=null;setStatus('');render();}
+
+/* ---------- misc ---------- */
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('on');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('on'),1800);}
+async function copyText(txt,msg){
+  try{await navigator.clipboard.writeText(txt);toast(msg);}
+  catch(e){const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy');}catch(_){}ta.remove();toast(ok?msg:'복사하지 못했습니다. 직접 선택해 복사하세요.');}
+}
+function go(k){
+  if(state.editing) return;
+  state.sel=k;setTab('list');
+  if(!filtered().some(x=>x.k===k)){state.q='';state.region='전체';$('#q').value='';renderFilters();syncClear();}
+  render();const tr=document.querySelector(`#rows tr[data-k="${k}"]`);tr&&tr.scrollIntoView({block:'nearest'});
+}
+function setTab(t){
+  state.tab=t;
+  document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===t));
+  ['list','region'].forEach(k=>$('#v-'+k).hidden=k!==t);
+  if(t==='region') renderRegions();
+  try{localStorage.setItem('codebook-tab',t);}catch(e){}
+}
+function syncClear(){const has=!!$('#q').value;$('#clear').hidden=!has;$('#kbd').hidden=has;}
+function renderNotes(){
+  if(!$('#notes')) return;
+  const noC=ROWS.filter(r=>!r.country), noM=ROWS.filter(r=>!r.mgr).length;
+  $('#notes').innerHTML=[
+    `12로 시작하는 거래처코드만 담았습니다.`,
+    noC.length?`국가가 비어 있는 거래처 ${noC.length}곳: ${noC.map(r=>r.code||r.dealer).join(', ')}.`:`모든 거래처에 국가가 입력되어 있습니다.`,
+    noM?`딜러담당자 없음 ${noM}곳.`:`모든 거래처에 딜러담당자가 입력되어 있습니다.`,
+    META.dropped.length?`처음 엑셀에서 가져올 때 두 번 적힌 행은 하나로 합쳤습니다: ${META.dropped.map(d=>d.replace(/^퍼시스 /,'').split(' ')[0]).join(', ')}.`:''
+  ].filter(Boolean).map(s=>`<li>${esc(s)}</li>`).join('');
+}
+
+document.addEventListener('click',e=>{
+  const rm=e.target.closest('[data-rm]');
+  if(rm){const k=rm.dataset.rm; if(draft.removed.has(k))draft.removed.delete(k); else draft.removed.add(k); render(); return;}
+  const mf=e.target.closest('[data-mgrf]');
+  if(mf){const v=mf.dataset.mgrf; state.mgr=(v==='__all'||state.mgr===v)?null:v; render(); return;}
+  const rf=e.target.closest('[data-regf]');
+  if(rf){const v=rf.dataset.regf; state.region=(state.region===v)?'전체':v; renderFilters(); render(); return;}
+  const er=e.target.closest('[data-editrow]'); if(er){startEdit(er.dataset.editrow,'mgr');return;}
+  const g=e.target.closest('[data-go]'); if(g){go(g.dataset.go);return;}
+  const c=e.target.closest('[data-copy]'); if(c){copyText(c.dataset.copy,`${c.dataset.copy} 복사됨`);return;}
+  if(state.editing) return;
+  if(e.target.closest('.mgr-in')) return;
+  const tr=e.target.closest('#rows tr[data-k]'); if(tr){state.sel=tr.dataset.k;render();return;}
+});
+$('#rows').addEventListener('keydown',e=>{if(!state.editing&&e.key==='Enter'&&e.target.dataset.k){state.sel=e.target.dataset.k;render();}});
+$('#rows').addEventListener('input',e=>{
+  const i=e.target; if(!state.editing||!i.dataset.f) return;
+  const r=editRow(i.dataset.k); r[i.dataset.f]=i.value;
+  const o=ROWS.find(x=>x.k===i.dataset.k);
+  i.classList.toggle('changed',!!o&&o[i.dataset.f]!==i.value);
+  if(i.dataset.f==='code'){const d=dupCodes();document.querySelectorAll('#rows input[data-f="code"]').forEach(x=>x.classList.toggle('dup',!!x.value&&d[norm(x.value)]>1));}
+  updateDirty();
+});
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+$('#q').addEventListener('input',e=>{state.q=e.target.value;syncClear();render();});
+$('#q').addEventListener('keydown',e=>{if(e.key==='Escape'){e.target.value='';state.q='';syncClear();render();}});
+$('#clear').onclick=()=>{$('#q').value='';state.q='';syncClear();render();$('#q').focus();};
+document.addEventListener('keydown',e=>{
+  const tag=document.activeElement.tagName;
+  if(e.key==='/'&&tag!=='INPUT'&&tag!=='TEXTAREA'){e.preventDefault();$('#q').focus();}
+  if(state.editing&&(e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();save();}
+});
+$('#editBtn').onclick=()=>startEdit();
+$('#addBtn').onclick=()=>{
+  const k=newKey(); draft.byKey[k]={k,code:'',dealer:'',country:'',region:'',mgr:''}; draft.added.push(k);
+  render(); const i=document.getElementById(`e-${k}-code`); i&&(i.scrollIntoView({block:'center'}),i.focus());
+};
+$('#saveBtn').onclick=save;
+$('#cancelBtn').onclick=cancelEdit;
+window.addEventListener('beforeunload',e=>{if(state.editing&&changes()){e.preventDefault();e.returnValue='';}});
+
+function boot(){renderStats();renderFilters();render();renderNotes();}
+boot();
+try{const t=localStorage.getItem('codebook-tab');if(t==='region')setTab(t);}catch(e){}
+
+// Saved edits live in data.json next to the page; the inline copy above is only the first paint.
+// Editing is offered only where the page can save itself (the claude.ai artifact view, for people with edit access).
+/* ---------- quick 딜러담당자 input: saves by itself a moment after typing stops ---------- */
+function setQuick(msg,err){const s=$('#saveInfo');s.textContent=msg;s.classList.toggle('err',!!err);}
+document.addEventListener('input',e=>{
+  const i=e.target; if(!i.dataset||!i.dataset.mgr||state.editing) return;
+  const r=ROWS.find(x=>x.k===i.dataset.mgr); if(!r) return;
+  r.mgr=i.value; pending.add(r.k);
+  document.querySelectorAll(`[data-mgr="${r.k}"]`).forEach(x=>{if(x!==i)x.value=i.value;x.classList.add('pending');});
+  setQuick('입력 중…'); clearTimeout(qsTimer); qsTimer=setTimeout(quickSave,1500);
+  renderSide();
+});
+document.addEventListener('keydown',e=>{if(e.target.dataset&&e.target.dataset.mgr&&e.key==='Enter'){e.preventDefault();clearTimeout(qsTimer);quickSave();
+  const ins=[...document.querySelectorAll('#rows .mgr-in')];const n=ins[ins.indexOf(e.target)+1];n&&n.focus();}});
+document.addEventListener('focusout',e=>{if(e.target.dataset&&e.target.dataset.mgr&&pending.size){clearTimeout(qsTimer);qsTimer=setTimeout(quickSave,300);}});
+async function quickSave(){
+  if(!pending.size) return;
+  if(qsBusy){clearTimeout(qsTimer);qsTimer=setTimeout(quickSave,800);return;}
+  qsBusy=true; const keys=[...pending]; setQuick('저장 중…');
+  const payload={rows:ROWS.map(r=>{const o={k:r.k};FIELDS.forEach(f=>o[f]=String(r[f]||'').trim());if(r.star)o.star=true;return o;}),updated:new Date().toISOString(),dropped:META.dropped};
+  try{
+    const where=await persist(payload);
+    keys.forEach(k=>pending.delete(k)); META.updated=payload.updated;
+    document.querySelectorAll('.mgr-in').forEach(x=>{if(!pending.has(x.dataset.mgr))x.classList.remove('pending');});
+    showSaved(where); renderStats(); renderNotes();
+  }catch(e){
+    const c=e&&e.code;
+    setQuick(c==='conflict'?'다른 곳에서 먼저 저장해 다시 불러옵니다':c==='rate_limited'?'저장이 잦아 잠시 후 다시 저장합니다':'저장하지 못했습니다. 다시 입력해 주세요',true);
+    if(c==='rate_limited'){clearTimeout(qsTimer);qsTimer=setTimeout(quickSave,5000);}
+  }finally{qsBusy=false;}
+}
+window.addEventListener('beforeunload',e=>{if(pending.size){e.preventDefault();e.returnValue='';}});
+
+// Saving: publish data.json to the artifact when this view can (claude.ai, edit access).
+// Every save is also kept in this browser, so typing is never lost where publishing is unavailable.
+let lastWhere='';
+async function persist(payload){
+  const json=JSON.stringify(payload,null,1);
+  let kept=false; try{localStorage.setItem('codebook-data',json);kept=true;}catch(e){}
+  let art=null;
+  try{ if(window.claude&&window.claude.use) art=await window.claude.use('artifact'); }catch(e){}
+  if(art){
+    try{ await art.publish({'data.json':{content:json,contentType:'application/json'}}); return 'shared'; }
+    catch(e){ const c=e&&e.code; if(c==='conflict'||c==='rate_limited') throw e; return 'local'; }
+  }
+  if(!kept) throw {code:'no_storage'};
+  return 'local';
+}
+function showSaved(where){
+  lastWhere=where;
+  setQuick(where==='shared'?`저장됨 · ${fmtDate(META.updated)}`:`이 브라우저에 저장됨 · ${fmtDate(META.updated)}`);
+}
+function localData(){try{const d=JSON.parse(localStorage.getItem('codebook-data')||'null');return d&&Array.isArray(d.rows)?d:null;}catch(e){return null;}}
+const newer=(a,b)=>(!b||(a&&(a.updated||'')>(b.updated||'')))?a:b;
+function withLocalMgr(d){
+  const L=localData(); if(!L||L===d) return d;
+  const m={}; L.rows.forEach(r=>{if(r.mgr)m[r.k]=r.mgr;});
+  return {...d,rows:d.rows.map(r=>(!r.mgr&&m[r.k])?{...r,mgr:m[r.k]}:r)};
+}
+(()=>{const L=localData(); const pick=withLocalMgr(newer(L,SEED)); loadData(pick); boot();})();
+fetch('data.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(d=>{
+  if(state.editing||pending.size) return;
+  const pick=withLocalMgr(newer(localData(),newer(d&&Array.isArray(d.rows)?d:null,SEED)));
+  loadData(pick); boot();
+}).catch(()=>{});
+
+// Copy the whole table for Excel
+$('#copyAll').onclick=()=>{
+  const lines=[FIELDS.map(f=>LABEL[f]).join('\t'),...ROWS.map(r=>FIELDS.map(f=>r[f]).join('\t'))];
+  copyText(lines.join('\n'),`${ROWS.length}행 복사됨 — 엑셀에 붙여넣으세요`);
+};
+</script>
+
+</body></html>

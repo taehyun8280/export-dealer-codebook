@@ -1,0 +1,607 @@
+{
+ "rows": [
+  {
+   "code": "12RF",
+   "dealer": "RF",
+   "country": "일본",
+   "region": "아시아",
+   "star": false,
+   "mgr": "",
+   "k": "s0"
+  },
+  {
+   "code": "12UY",
+   "dealer": "UY",
+   "country": "일본",
+   "region": "아시아",
+   "star": false,
+   "mgr": "",
+   "k": "s1"
+  },
+  {
+   "code": "12JIS",
+   "dealer": "JIS/JAEI",
+   "country": "중국",
+   "region": "아시아",
+   "star": false,
+   "mgr": "",
+   "k": "s2"
+  },
+  {
+   "code": "12CENO",
+   "dealer": "CENO",
+   "country": "베트남",
+   "region": "아시아",
+   "star": false,
+   "mgr": "",
+   "k": "s5"
+  },
+  {
+   "code": "12HMI",
+   "dealer": "HMI",
+   "country": "인도",
+   "region": "아시아",
+   "star": false,
+   "mgr": "",
+   "k": "s6"
+  },
+  {
+   "code": "12SHAN",
+   "dealer": "SHAN",
+   "country": "중국",
+   "region": "아시아",
+   "star": false,
+   "mgr": "",
+   "k": "s7"
+  },
+  {
+   "code": "12COR",
+   "dealer": "COR",
+   "country": "인도네시아",
+   "region": "아시아",
+   "star": false,
+   "mgr": "",
+   "k": "s8"
+  },
+  {
+   "code": "12VAN",
+   "dealer": "VAN",
+   "country": "싱가폴",
+   "region": "아시아",
+   "star": false,
+   "mgr": "",
+   "k": "s9"
+  },
+  {
+   "code": "12AIO",
+   "dealer": "AIO",
+   "country": "필리핀",
+   "region": "아시아",
+   "star": false,
+   "mgr": "",
+   "k": "s11"
+  },
+  {
+   "code": "12JII",
+   "dealer": "JII",
+   "country": "자카르타",
+   "region": "아시아",
+   "star": false,
+   "mgr": "",
+   "k": "s12"
+  },
+  {
+   "code": "12DLX",
+   "dealer": "DLX",
+   "country": "파키스탄",
+   "region": "아시아",
+   "star": false,
+   "mgr": "",
+   "k": "s13"
+  },
+  {
+   "code": "12ILTW",
+   "dealer": "ILTW",
+   "country": "대만",
+   "region": "아시아",
+   "star": false,
+   "mgr": "",
+   "k": "s14"
+  },
+  {
+   "code": "12APC",
+   "dealer": "APC",
+   "country": "베트남",
+   "region": "아시아",
+   "star": false,
+   "mgr": "",
+   "k": "s15"
+  },
+  {
+   "code": "12AW",
+   "dealer": "AW",
+   "country": "말레이시아",
+   "region": "아시아",
+   "star": false,
+   "mgr": "",
+   "k": "s16"
+  },
+  {
+   "code": "12ANUN",
+   "dealer": "ANUN",
+   "country": "태국",
+   "region": "아시아",
+   "star": false,
+   "mgr": "",
+   "k": "s17"
+  },
+  {
+   "code": "12RS",
+   "dealer": "RS",
+   "country": "스리랑카",
+   "region": "아시아",
+   "star": false,
+   "mgr": "",
+   "k": "s18"
+  },
+  {
+   "code": "12KAZ",
+   "dealer": "KAZ",
+   "country": "카자흐스탄",
+   "region": "아시아",
+   "star": false,
+   "mgr": "",
+   "k": "s19"
+  },
+  {
+   "code": "12TAN",
+   "dealer": "TAN",
+   "country": "카자흐스탄",
+   "region": "아시아",
+   "star": false,
+   "mgr": "",
+   "k": "s20"
+  },
+  {
+   "code": "12KMG",
+   "dealer": "KMG",
+   "country": "카자흐스탄",
+   "region": "아시아",
+   "star": false,
+   "mgr": "",
+   "k": "s21"
+  },
+  {
+   "code": "12KTNGKZ",
+   "dealer": "KTNGKZ",
+   "country": "카자흐스탄",
+   "region": "아시아",
+   "star": false,
+   "mgr": "",
+   "k": "s22"
+  },
+  {
+   "code": "12AJD",
+   "dealer": "AJD",
+   "country": "홍콩/필리핀",
+   "region": "아시아",
+   "star": false,
+   "mgr": "",
+   "k": "s23"
+  },
+  {
+   "code": "12ANP",
+   "dealer": "ANP",
+   "country": "카타르",
+   "region": "중동",
+   "star": true,
+   "mgr": "",
+   "k": "s24"
+  },
+  {
+   "code": "12RHC",
+   "dealer": "RHC",
+   "country": "사우디",
+   "region": "중동",
+   "star": true,
+   "mgr": "",
+   "k": "s25"
+  },
+  {
+   "code": "12SPW",
+   "dealer": "SPW",
+   "country": "UAE",
+   "region": "중동",
+   "star": false,
+   "mgr": "",
+   "k": "s26"
+  },
+  {
+   "code": "12AGE",
+   "dealer": "AGE",
+   "country": "UAE",
+   "region": "중동",
+   "star": true,
+   "mgr": "",
+   "k": "s27"
+  },
+  {
+   "code": "12ARCO",
+   "dealer": "ARCO",
+   "country": "UAE",
+   "region": "중동",
+   "star": false,
+   "mgr": "",
+   "k": "s28"
+  },
+  {
+   "code": "12SFO",
+   "dealer": "SFO",
+   "country": "오만",
+   "region": "중동",
+   "star": true,
+   "mgr": "",
+   "k": "s29"
+  },
+  {
+   "code": "12KEN",
+   "dealer": "KEN",
+   "country": "케냐",
+   "region": "아프리카",
+   "star": false,
+   "mgr": "",
+   "k": "s30"
+  },
+  {
+   "code": "12DI",
+   "dealer": "DI",
+   "country": "호주",
+   "region": "오세아니아",
+   "star": false,
+   "mgr": "",
+   "k": "s31"
+  },
+  {
+   "code": "12PUA",
+   "dealer": "PUA",
+   "country": "호주",
+   "region": "오세아니아",
+   "star": false,
+   "mgr": "",
+   "k": "s32"
+  },
+  {
+   "code": "12EO",
+   "dealer": "EO",
+   "country": "러시아",
+   "region": "유럽",
+   "star": false,
+   "mgr": "",
+   "k": "s34"
+  },
+  {
+   "code": "12FFE",
+   "dealer": "FFE",
+   "country": "러시아",
+   "region": "유럽",
+   "star": false,
+   "mgr": "",
+   "k": "s35"
+  },
+  {
+   "code": "12NY",
+   "dealer": "NY",
+   "country": "미국",
+   "region": "북미",
+   "star": false,
+   "mgr": "",
+   "k": "s37"
+  },
+  {
+   "code": "12IMA",
+   "dealer": "IMA",
+   "country": "미국",
+   "region": "북미",
+   "star": false,
+   "mgr": "",
+   "k": "s38"
+  },
+  {
+   "code": "12GUAM",
+   "dealer": "GUAM",
+   "country": "미국",
+   "region": "북미",
+   "star": false,
+   "mgr": "",
+   "k": "s39"
+  },
+  {
+   "code": "12LA",
+   "dealer": "LA",
+   "country": "미국",
+   "region": "북미",
+   "star": false,
+   "mgr": "",
+   "k": "s40"
+  },
+  {
+   "code": "12MAV",
+   "dealer": "MAV",
+   "country": "미국",
+   "region": "북미",
+   "star": false,
+   "mgr": "",
+   "k": "s41"
+  },
+  {
+   "code": "12TOF",
+   "dealer": "TOF",
+   "country": "미국",
+   "region": "북미",
+   "star": false,
+   "mgr": "",
+   "k": "s42"
+  },
+  {
+   "code": "12BIF",
+   "dealer": "BIF",
+   "country": "미국",
+   "region": "북미",
+   "star": false,
+   "mgr": "",
+   "k": "s43"
+  },
+  {
+   "code": "12CLE",
+   "dealer": "CLE",
+   "country": "미국",
+   "region": "북미",
+   "star": false,
+   "mgr": "",
+   "k": "s44"
+  },
+  {
+   "code": "12JIMP",
+   "dealer": "JIMP",
+   "country": "미국",
+   "region": "북미",
+   "star": false,
+   "mgr": "",
+   "k": "s45"
+  },
+  {
+   "code": "12SDA",
+   "dealer": "SDA",
+   "country": "미국",
+   "region": "북미",
+   "star": false,
+   "mgr": "",
+   "k": "s46"
+  },
+  {
+   "code": "12CLEV",
+   "dealer": "CLEV",
+   "country": "미국",
+   "region": "북미",
+   "star": false,
+   "mgr": "",
+   "k": "s47"
+  },
+  {
+   "code": "12FAM",
+   "dealer": "FAM",
+   "country": "미국",
+   "region": "북미",
+   "star": false,
+   "mgr": "",
+   "k": "s48"
+  },
+  {
+   "code": "12INICS",
+   "dealer": "INICS",
+   "country": "멕시코",
+   "region": "북미",
+   "star": false,
+   "mgr": "",
+   "k": "s49"
+  },
+  {
+   "code": "12CHL",
+   "dealer": "CHL",
+   "country": "칠레",
+   "region": "중남미",
+   "star": false,
+   "mgr": "",
+   "k": "s50"
+  },
+  {
+   "code": "12COL",
+   "dealer": "COL",
+   "country": "콜롬비아",
+   "region": "중남미",
+   "star": false,
+   "mgr": "",
+   "k": "s51"
+  },
+  {
+   "code": "12COS",
+   "dealer": "COS",
+   "country": "코스타리카",
+   "region": "중남미",
+   "star": false,
+   "mgr": "",
+   "k": "s52"
+  },
+  {
+   "code": "12GUA",
+   "dealer": "GUA",
+   "country": "과테말라",
+   "region": "중남미",
+   "star": false,
+   "mgr": "",
+   "k": "s53"
+  },
+  {
+   "code": "12HON",
+   "dealer": "HON",
+   "country": "온두라스",
+   "region": "중남미",
+   "star": false,
+   "mgr": "",
+   "k": "s54"
+  },
+  {
+   "code": "12CUR",
+   "dealer": "CUR",
+   "country": "퀴라소",
+   "region": "중남미",
+   "star": false,
+   "mgr": "",
+   "k": "s55"
+  },
+  {
+   "code": "12JAM",
+   "dealer": "JAM",
+   "country": "자메이카",
+   "region": "중남미",
+   "star": false,
+   "mgr": "",
+   "k": "s56"
+  },
+  {
+   "code": "12PER",
+   "dealer": "PER",
+   "country": "페루",
+   "region": "중남미",
+   "star": false,
+   "mgr": "",
+   "k": "s57"
+  },
+  {
+   "code": "12PNM",
+   "dealer": "PNM",
+   "country": "파나마",
+   "region": "중남미",
+   "star": false,
+   "mgr": "",
+   "k": "s58"
+  },
+  {
+   "code": "12VEN",
+   "dealer": "VEN",
+   "country": "베네수엘라",
+   "region": "중남미",
+   "star": false,
+   "mgr": "",
+   "k": "s59"
+  },
+  {
+   "code": "12AMRP",
+   "dealer": "AMRP",
+   "country": "인도",
+   "region": "아시아",
+   "star": false,
+   "mgr": "",
+   "k": "s61"
+  },
+  {
+   "code": "12STUO",
+   "dealer": "STUO",
+   "country": "과테말라",
+   "region": "중남미",
+   "star": false,
+   "mgr": "",
+   "k": "s64"
+  },
+  {
+   "code": "12FMT",
+   "dealer": "FMT",
+   "country": "페루",
+   "region": "중남미",
+   "star": false,
+   "mgr": "",
+   "k": "s65"
+  },
+  {
+   "code": "12VFLC",
+   "dealer": "VFLC",
+   "country": "베네수엘라",
+   "region": "중남미",
+   "star": false,
+   "mgr": "",
+   "k": "s66"
+  },
+  {
+   "code": "12ERG",
+   "dealer": "ERG",
+   "country": "도미니카 공화국",
+   "region": "중남미",
+   "star": false,
+   "mgr": "",
+   "k": "s67"
+  },
+  {
+   "code": "12LAY",
+   "dealer": "LAY",
+   "country": "에콰도르",
+   "region": "중남미",
+   "star": false,
+   "mgr": "",
+   "k": "s68"
+  },
+  {
+   "code": "12SAH",
+   "dealer": "SAH",
+   "country": "콜롬비아",
+   "region": "중남미",
+   "star": false,
+   "mgr": "",
+   "k": "s69"
+  },
+  {
+   "code": "12JSOS",
+   "dealer": "JSOS",
+   "country": "자메이카",
+   "region": "중남미",
+   "star": false,
+   "mgr": "",
+   "k": "s70"
+  },
+  {
+   "code": "12MEX",
+   "dealer": "MEX",
+   "country": "멕시코",
+   "region": "북미",
+   "star": false,
+   "mgr": "",
+   "k": "s71"
+  },
+  {
+   "code": "12SCH",
+   "dealer": "SCH",
+   "country": "중국",
+   "region": "아시아",
+   "star": false,
+   "mgr": "",
+   "k": "s72"
+  },
+  {
+   "code": "12SHMZ",
+   "dealer": "SHMZ",
+   "country": "싱가폴",
+   "region": "아시아",
+   "star": false,
+   "mgr": "",
+   "k": "s73"
+  }
+ ],
+ "dropped": [
+  "퍼시스 12SFO SFO (중복 행)",
+  "퍼시스 12STUO STUO (중복 행)",
+  "퍼시스 12PNM PNM (중복 행)",
+  "퍼시스 12CUR CUR (중복 행)",
+  "퍼시스 12COS COS (중복 행)",
+  "퍼시스 COR (코드 없는 중복 행)"
+ ],
+ "updated": "2026-10-08T06:19:14.911523Z"
+}
