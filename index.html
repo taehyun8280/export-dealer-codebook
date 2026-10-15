@@ -193,7 +193,7 @@ header.top{background:var(--hero);background-image:radial-gradient(circle at 1px
 h1{font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--hero-ink)}
 .eyebrow{font:600 11px var(--font-mono);letter-spacing:.14em;color:var(--hero-muted);margin-bottom:6px}
 .stats{gap:10px}
-.stats span{display:flex;flex-direction:column;align-items:flex-start;gap:2px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 14px;color:var(--hero-muted);font-size:11.5px;min-width:92px}
+.stats > span{display:flex;flex-direction:column;align-items:flex-start;gap:2px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 14px;color:var(--hero-muted);font-size:11.5px;min-width:92px}
 .stats b{font-size:22px;color:var(--hero-ink);margin:0;line-height:1.1}
 .stats b small{font:600 14px var(--font-body);margin-left:3px;color:var(--hero-ink)}
 
@@ -285,6 +285,31 @@ td.code mark{color:inherit;background:color-mix(in srgb,var(--c,var(--accent)) 1
 .btn.primary{box-shadow:0 2px 6px color-mix(in srgb,var(--accent) 35%,transparent)}
 
 @media (max-width:560px){header.top{padding:20px 18px 52px}h1{font-size:23px}.stats span{min-width:0;padding:6px 10px}.stats b{font-size:18px}.search{margin-inline:8px}}
+
+/* ===== Polish pass: toolbar, region group rows, ISO badges, avatars, KPI ===== */
+.toolbar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px 16px;margin-bottom:16px}
+.toolbar .tabs{margin:0}
+.toolbar .filters{margin:0}
+.flabel{margin-right:4px}
+.stats span.kpi-mgr{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.28)}
+.stats .mini{display:block;width:100%;height:4px;border-radius:999px;background:rgba(255,255,255,.18);margin-top:5px;overflow:hidden}
+.stats .mini i{display:block;height:100%;background:#7FD1A8;border-radius:999px}
+tr.grp td{background:color-mix(in srgb,var(--c) 9%,var(--surface)) !important;padding:9px 14px;border-bottom:1px solid color-mix(in srgb,var(--c) 25%,var(--line));cursor:default}
+tr.grp:hover td{background:color-mix(in srgb,var(--c) 9%,var(--surface)) !important}
+.grp-in{display:flex;align-items:center;gap:10px;font-weight:700;font-size:13.5px;color:var(--ink)}
+.grp-in::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--c)}
+.grp-in small{font:600 11.5px var(--font-mono);color:var(--c);background:var(--surface);border:1px solid color-mix(in srgb,var(--c) 30%,var(--line));border-radius:999px;padding:1px 8px}
+.grp-in .grp-meta{margin-left:auto;font:500 12px var(--font-body);color:var(--muted)}
+tbody tr.grp + tr td{border-top:0}
+.iso{display:inline-block;min-width:30px;text-align:center;font:600 10.5px var(--font-mono);letter-spacing:.04em;color:var(--muted);background:var(--sunken);border:1px solid var(--line);border-radius:5px;padding:1px 5px;margin-right:8px;vertical-align:1px}
+.av{display:inline-flex;align-items:center;justify-content:center;flex:none;width:24px;height:24px;border-radius:50%;font:700 11.5px var(--font-body);color:var(--c);background:color-mix(in srgb,var(--c) 16%,var(--surface));border:1px solid color-mix(in srgb,var(--c) 30%,transparent)}
+td.mgr .who{display:inline-flex;align-items:center;gap:8px;font-weight:600}
+td.mgr-cell .who-edit{display:flex;align-items:center;gap:6px}
+td.mgr-cell .who-edit .av{width:22px;height:22px;font-size:11px}
+.sp-name .av{width:20px;height:20px;font-size:10.5px}
+.sp-item{grid-template-columns:112px minmax(0,1fr) 30px}
+tbody tr:not(.grp){transition:background-color .12s}
+@media (max-width:720px){.toolbar{flex-direction:column;align-items:stretch}.grp-in .grp-meta{display:none}}
 </style>
 
 </head><body>
@@ -304,13 +329,14 @@ td.code mark{color:inherit;background:color-mix(in srgb,var(--c,var(--accent)) 1
     <button class="clear" id="clear" hidden>지우기</button>
   </div>
 
-  <div class="filters">
-    <div class="fgroup" id="fRegion"><span class="flabel">지역</span></div>
-  </div>
-
-  <div class="tabs" role="tablist">
-    <button class="tab" role="tab" id="t-list" aria-selected="true" data-tab="list">코드 조회</button>
-    <button class="tab" role="tab" id="t-region" aria-selected="false" data-tab="region">지역·국가별</button>
+  <div class="toolbar">
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" id="t-list" aria-selected="true" data-tab="list">코드 조회</button>
+      <button class="tab" role="tab" id="t-region" aria-selected="false" data-tab="region">지역·국가별</button>
+    </div>
+    <div class="filters">
+      <div class="fgroup" id="fRegion"><span class="flabel">지역</span></div>
+    </div>
   </div>
 
   <section id="v-list">
@@ -385,8 +411,10 @@ function hl(text,q){
   if(i<0) return t;
   return esc(text.slice(0,i))+'<mark>'+esc(text.slice(i,i+q.length))+'</mark>'+esc(text.slice(i+q.length));
 }
-function mgrHTML(r,q){ return r.mgr?hl(r.mgr,q||''):''; }
-function countryHTML(r){ return r.country?esc(r.country):'<span class="missing">미기재</span>'; }
+function mgrHTML(r,q){ return r.mgr?`<span class="who">${avatar(r.mgr)}${hl(r.mgr,q||'')}</span>`:''; }
+const ISO={'일본':'JP','중국':'CN','베트남':'VN','인도':'IN','인도네시아':'ID','싱가폴':'SG','싱가포르':'SG','필리핀':'PH','자카르타':'ID','파키스탄':'PK','대만':'TW','말레이시아':'MY','태국':'TH','스리랑카':'LK','카자흐스탄':'KZ','홍콩/필리핀':'HK','홍콩':'HK','카타르':'QA','사우디':'SA','UAE':'AE','오만':'OM','케냐':'KE','호주':'AU','러시아':'RU','미국':'US','멕시코':'MX','칠레':'CL','콜롬비아':'CO','코스타리카':'CR','과테말라':'GT','온두라스':'HN','퀴라소':'CW','자메이카':'JM','페루':'PE','파나마':'PA','베네수엘라':'VE','도미니카 공화국':'DO','에콰도르':'EC','캐나다':'CA','영국':'GB','독일':'DE','프랑스':'FR'};
+function countryHTML(r){ if(!r.country) return '<span class="missing">미기재</span>'; const c=ISO[r.country]; return (c?`<span class="iso">${c}</span>`:'')+esc(r.country); }
+function avatar(name){ const n=String(name||'').trim(); if(!n) return ''; let h=0; for(const ch of n) h=(h*31+ch.charCodeAt(0))>>>0; return `<span class="av" style="--c:var(--rg${h%7})" aria-hidden="true">${esc(n[0])}</span>`; }
 
 function score(r,q){
   if(!q) return 1;
@@ -420,7 +448,8 @@ function renderStats(){
   const countries=new Set(ROWS.filter(r=>r.country).map(r=>r.country));
   const codes=new Set(ROWS.filter(r=>r.code).map(r=>r.code));
   const regions=new Set(ROWS.filter(r=>r.region).map(r=>r.region));
-  $('#stats').innerHTML=`<span><b>${codes.size}<small>개</small></b>거래처코드</span><span><b>${countries.size}<small>개</small></b>국가</span><span><b>${regions.size}<small>개</small></b>지역</span>`;
+  $('#stats').innerHTML=`<span><b>${codes.size}<small>개</small></b>거래처코드</span><span><b>${countries.size}<small>개</small></b>국가</span><span><b>${regions.size}<small>개</small></b>지역</span>`+
+    (()=>{const n=ROWS.length,m=ROWS.filter(r=>r.mgr&&r.mgr.trim()).length;return `<span class="kpi-mgr"><b>${m}<small>/${n}</small></b>담당자 지정<span class="mini"><i style="width:${n?Math.round(m/n*100):0}%"></i></span></span>`;})();
   const uniq=f=>[...new Set(ROWS.map(r=>r[f]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'ko'));
   $('#dlCountry').innerHTML=uniq('country').map(v=>`<option value="${esc(v)}">`).join('');
   $('#dlRegion').innerHTML=uniq('region').map(v=>`<option value="${esc(v)}">`).join('');
@@ -450,7 +479,7 @@ function rowView(r,q){
     <td>${hl(r.dealer,q)}</td>
     <td class="country-cell">${countryHTML(r)}</td>
     <td>${regionPill(r.region)}</td>
-    ${state.canSave?`<td class="mgr-cell"><input class="mgr-in ${pending.has(r.k)?'pending':''}" id="m-${r.k}" data-mgr="${r.k}" value="${esc(r.mgr)}" list="dlMgr" aria-label="${esc(r.code||r.dealer)} 딜러담당자"></td>`:`<td class="mgr">${mgrHTML(r,q)}</td>`}</tr>`;
+    ${state.canSave?`<td class="mgr-cell"><span class="who-edit">${avatar(r.mgr)}<input class="mgr-in ${pending.has(r.k)?'pending':''}" id="m-${r.k}" data-mgr="${r.k}" value="${esc(r.mgr)}" list="dlMgr" aria-label="${esc(r.code||r.dealer)} 딜러담당자"></span></td>`:`<td class="mgr">${mgrHTML(r,q)}</td>`}</tr>`;
 }
 function rowEdit(r,dups){
   const orig=ROWS.find(x=>x.k===r.k);
@@ -477,7 +506,15 @@ function render(){
     if(q && list.length && score(list[0],q)>=90) state.sel=list[0].k;
     else if(state.sel!==null && !list.some(r=>r.k===state.sel)) state.sel=list.length?list[0].k:null;
     if(state.sel===null && list.length) state.sel=list[0].k;
-    $('#rows').innerHTML=list.map(r=>rowView(r,q)).join('');
+    let html='', prev=null;
+    const grouped=!q;
+    const counts={}; if(grouped) list.forEach(r=>{const k=r.region||'미분류';counts[k]=counts[k]||{n:0,c:new Set(),m:0};counts[k].n++;if(r.country)counts[k].c.add(r.country);if(r.mgr)counts[k].m++;});
+    list.forEach(r=>{
+      const k=r.region||'미분류';
+      if(grouped&&k!==prev){const g=counts[k];html+=`<tr class="grp" style="--c:${regionColor(k)}"><td colspan="5"><div class="grp-in">${esc(k)}<small>${g.n}</small><span class="grp-meta">${g.c.size}개 국가 · 담당자 ${g.m}/${g.n}</span></div></td></tr>`;prev=k;}
+      html+=rowView(r,q);
+    });
+    $('#rows').innerHTML=html;
   }
   $('#listGrid').style.gridTemplateColumns=state.editing?'minmax(0,1fr)':'';
   $('#side').hidden=state.editing;
@@ -501,7 +538,7 @@ function renderSide(){
     <div class="sp-head"><div class="sp-title">딜러담당자 현황 ${state.mgr!==null?'<button class="sp-clear" data-mgrf="__all">필터 해제</button>':`<small>${done} / ${total} 지정</small>`}</div>
       <div class="prog" title="담당자 지정 ${done}/${total}"><i style="width:${total?Math.round(done/total*100):0}%"></i></div></div>
     ${mgrs.length?'':'<div class="sp-empty">지정된 딜러담당자가 없습니다.</div>'}
-    <ul class="sp-list">${mgrs.map(([m,n])=>item(m,esc(m),n,maxM,'',state.mgr===m)).join('')}
+    <ul class="sp-list">${mgrs.map(([m,n])=>item(m,avatar(m)+esc(m),n,maxM,'',state.mgr===m)).join('')}
       ${none?item('','담당자 없음',none,maxM,'none',state.mgr===''):''}</ul></section>`;
   const byR={}; ROWS.forEach(r=>{const k=r.region||'미분류';byR[k]=(byR[k]||0)+1;});
   const regs=Object.entries(byR).sort((a,b)=>b[1]-a[1]||regionRank(a[0])-regionRank(b[0]));
